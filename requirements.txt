@@ -2,8 +2,8 @@ fastapi
 uvicorn
 python-multipart
 numpy
+pillow
 opencv-python-headless
 onnxruntime
-pillow
-insightface
 requests
+insightface==0.7.3
