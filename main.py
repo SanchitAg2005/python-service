@@ -5,16 +5,11 @@ from scan_match import scan_and_match
 from pymongo import MongoClient
 import os
 
-# -----------------------
-# MONGO CONNECTION
-# -----------------------
+app = FastAPI()  # <-- CREATE APP FIRST
+
+# --- MongoDB Setup ---
 MONGO_URI = os.getenv("MONGO_URI")
 client = MongoClient(MONGO_URI)
-
-# -----------------------
-# FASTAPI APP
-# -----------------------
-app = FastAPI()
 
 @app.get("/db-test")
 def db_test():
@@ -24,10 +19,7 @@ def db_test():
     except Exception as e:
         return {"mongo": "failed", "error": str(e)}
 
-
-# -----------------------
-# REQUEST MODELS
-# -----------------------
+# --- Request Models ---
 class EncodeRequest(BaseModel):
     image_url: str
 
@@ -35,10 +27,6 @@ class ScanMatchRequest(BaseModel):
     image_urls: list
     friend_embeddings: dict
 
-
-# -----------------------
-# ROUTES
-# -----------------------
 @app.get("/health")
 def health():
     return {"status": "ok"}
