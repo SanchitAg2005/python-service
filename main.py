@@ -17,11 +17,11 @@ def health():
     return {"status": "ok"}
 
 @app.post("/encode")
-def encode_face(req: EncodeRequest):
+def encode_route(req: EncodeRequest):
     emb = generate_embeddings(req.image_url)
     return {"embeddings": emb}
 
 @app.post("/scan-match")
-def scan_match(req: ScanMatchRequest):
+def scan_match_route(req: ScanMatchRequest):
     result = scan_and_match(req.image_urls, req.friend_embeddings)
     return {"results": result}
