@@ -2,19 +2,21 @@ FROM python:3.10-slim
 
 WORKDIR /app
 
-# Install system dependencies required by insightface + ONNXRuntime
+# Install system dependencies (lightweight)
 RUN apt-get update && apt-get install -y \
     libgl1 \
     libglib2.0-0 \
+    libgomp1 \
     wget \
-    g++ \
-    build-essential \
     && rm -rf /var/lib/apt/lists/*
 
 COPY requirements.txt .
 
-# Install insightface with environment variable to skip building 3D mesh
+# Disable heavy parts of insightface
 ENV INSIGHTFACE_SKIP_CYTHON=1
+ENV INSIGHTFACE_DISABLE_TRT=1
+ENV OMP_NUM_THREADS=1
+ENV OMP_WAIT_POLICY=PASSIVE
 
 RUN pip install --no-cache-dir -r requirements.txt
 
