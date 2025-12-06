@@ -2,9 +2,32 @@ from fastapi import FastAPI
 from pydantic import BaseModel
 from encode import generate_embeddings
 from scan_match import scan_and_match
+from pymongo import MongoClient
+import os
 
+# -----------------------
+# MONGO CONNECTION
+# -----------------------
+MONGO_URI = os.getenv("MONGO_URI")
+client = MongoClient(MONGO_URI)
+
+# -----------------------
+# FASTAPI APP
+# -----------------------
 app = FastAPI()
 
+@app.get("/db-test")
+def db_test():
+    try:
+        client.admin.command("ping")
+        return {"mongo": "connected"}
+    except Exception as e:
+        return {"mongo": "failed", "error": str(e)}
+
+
+# -----------------------
+# REQUEST MODELS
+# -----------------------
 class EncodeRequest(BaseModel):
     image_url: str
 
@@ -12,6 +35,10 @@ class ScanMatchRequest(BaseModel):
     image_urls: list
     friend_embeddings: dict
 
+
+# -----------------------
+# ROUTES
+# -----------------------
 @app.get("/health")
 def health():
     return {"status": "ok"}
