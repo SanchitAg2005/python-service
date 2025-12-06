@@ -5,7 +5,7 @@ from scan_match import scan_and_match
 from pymongo import MongoClient
 import os
 
-app = FastAPI()  # <-- CREATE APP FIRST
+app = FastAPI()
 
 # --- MongoDB Setup ---
 MONGO_URI = os.getenv("MONGO_URI")
@@ -33,10 +33,10 @@ def health():
 
 @app.post("/encode")
 def encode_route(req: EncodeRequest):
-    emb = generate_embeddings(req.image_url)
-    return {"embeddings": emb}
+    embeddings = generate_embeddings(req.image_url)
+    return {"embeddings": embeddings}
 
 @app.post("/scan-match")
 def scan_match_route(req: ScanMatchRequest):
-    result = scan_and_match(req.image_urls, req.friend_embeddings)
-    return {"results": result}
+    results = scan_and_match(req.image_urls, req.friend_embeddings)
+    return {"results": results}
