@@ -1,11 +1,19 @@
-import cv2
+import insightface
 import numpy as np
-from io import BytesIO
 from PIL import Image
 import requests
+from io import BytesIO
 
-def download_image(url):
-    response = requests.get(url, timeout=30)
-    response.raise_for_status()
+model = None
+
+def get_model():
+    global model
+    if model is None:
+        model = insightface.app.FaceAnalysis(name="buffalo_l", providers=['CPUExecutionProvider'])
+        model.prepare(ctx_id=0)
+    return model
+
+def load_image_from_url(url: str):
+    response = requests.get(url)
     img = Image.open(BytesIO(response.content)).convert("RGB")
-    return cv2.cvtColor(np.array(img), cv2.COLOR_RGB2BGR)
+    return np.array(img)
